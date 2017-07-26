@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.srinivas.tmdb.api.ApiUtils;
+import com.example.srinivas.tmdb.api.TMDBApiUtils;
 import com.example.srinivas.tmdb.api.data_model.items.Genre;
 import com.example.srinivas.tmdb.api.data_model.responses.GenreResponse;
 
@@ -53,15 +53,15 @@ public class FragmentGenreList extends Fragment {
         genreAdapter = new GenreAdapter();
         recyclerView.setAdapter(genreAdapter);
 
-        getGenres();
+        getGenres(1);
 
         return v;
     }
 
-    private void getGenres() {
+    private void getGenres(int pageNo) {
 
         progressBar.show();
-        ApiUtils.getTMDBService().getGenres().enqueue(new Callback<GenreResponse>() {
+        TMDBApiUtils.getTMDBService().getGenres(pageNo).enqueue(new Callback<GenreResponse>() {
             @Override
             public void onResponse(@NonNull Call<GenreResponse> call, @NonNull Response<GenreResponse> response) {
                 Log.e("Network", "Succeded");

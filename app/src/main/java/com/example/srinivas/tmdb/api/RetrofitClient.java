@@ -1,6 +1,7 @@
 package com.example.srinivas.tmdb.api;
 
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -13,17 +14,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 class RetrofitClient {
 
     private static Retrofit retrofit = null;
+    private static Map<String, String> queryParams;
 
-    static Retrofit getClient(String baseUrl) {
+    static Retrofit getClient(String baseUrl, Map<String, String> defaultQueryParams) {
+        queryParams = defaultQueryParams;
         if (retrofit == null) {
             OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
             clientBuilder.interceptors().add(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request request = chain.request();
-                    HttpUrl url = request.url()
-                            .newBuilder()
-                            .addQueryParameter("api_key", "150d4acea63bc73968317383bfeacb23")
+                    HttpUrl.Builder urlBuilder = request.url()
+                            .newBuilder();
+
+                    for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+                        urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+                    }
+
+                    HttpUrl url = urlBuilder
                             .build();
                     Request newRequest = chain.request().newBuilder().url(url).build();
                     return chain.proceed(newRequest);
