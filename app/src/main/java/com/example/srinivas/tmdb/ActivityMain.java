@@ -18,7 +18,6 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
-
         fragmentManager.beginTransaction().add(R.id.container, new FragmentGenreList()).commit();
     }
 
